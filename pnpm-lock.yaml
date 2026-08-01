@@ -17,6 +17,22 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
+  packages/core:
+    dependencies:
+      '@datasieve/query-language':
+        specifier: workspace:*
+        version: link:../query-language
+    devDependencies:
+      tsup:
+        specifier: ^8.3.5
+        version: 8.5.1(postcss@8.5.25)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9
+
   packages/query-language:
     devDependencies:
       tsup:

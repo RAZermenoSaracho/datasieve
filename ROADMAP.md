@@ -69,7 +69,7 @@ Two splits make this pipeline sustainable as the ecosystem grows:
 
 | Package | Responsibility |
 |---|---|
-| `datasieve` | The main public package most applications install. Re-exports the stable, blessed API surface from the packages below so a typical consumer never needs to think about the internal package boundaries. |
+| `datasieve` | The main public package most applications install. Re-exports the stable, blessed API surface from the packages below so a typical consumer never needs to think about the internal package boundaries. **Completed — see Milestone 4.** |
 | `@datasieve/query-language` | DSQL — the database-agnostic query language. Public query types, operator definitions, the internal AST, and parse/validate/normalize. Has no knowledge of execution, adapters, or any specific storage technology. **Completed — see Milestone 1.** |
 | `@datasieve/core` | The query engine. Defines the adapter contract, runs the execution pipeline, hosts the plugin and middleware system, and owns the standardized response contract (`DataSieveResponse<T>`). Depends on `@datasieve/query-language`; depends on nothing else in the ecosystem. **Completed — see Milestone 2.** |
 | `@datasieve/prisma` | The first adapter. Translates `QueryAST` into Prisma Client calls and Prisma results back into the shapes Core expects. Proves the Core/adapter contract works against a real, popular ORM. **Completed — see Milestone 3.** |
@@ -159,33 +159,54 @@ The build order is not arbitrary — each milestone exists to de-risk the one af
 
 ---
 
-### Milestone 4 — `datasieve`
+### Milestone 4 — `datasieve` ✅
 
-**Status:** Next
+**Status:** Completed
 
 **Goal:** Ship the single public package most applications actually install.
 
 **Motivation:** `@datasieve/query-language`, `@datasieve/core`, and `@datasieve/prisma` exist as separate packages for internal composability and so advanced users (and future adapter authors) can depend on exactly what they need. Most application developers don't want to reason about that boundary — they want `npm install datasieve` and a working engine.
 
-**Deliverables:**
-- Re-exports of the stable, blessed API surface from `@datasieve/query-language` and `@datasieve/core`.
-- A documented versioning/compatibility policy between `datasieve` and the packages it re-exports.
+**Delivered:**
+- `datasieve` — a re-export-only package (no logic of its own) depending on `@datasieve/core`, `@datasieve/query-language`, and `@datasieve/prisma` via `workspace:*`, giving `createDataSieve()` + `prismaAdapter()` + the full query language in one install.
+- A **deliberately curated** public surface, not a blanket re-export: `QueryAST` and every AST node type, the adapter-authoring contract (`DataSieveAdapter`, `AdapterExecuteResult`), the pipeline internals (`executeQuery`, `runHooks`, `buildResponse`, `parseQuery`/`validateQuery`/`normalizeQuery`), and every `@datasieve/prisma` translation helper are all deliberately **excluded** — each is exactly the kind of implementation detail an application developer never touches, and each remains one `npm install @datasieve/<package>` away for the advanced users (adapter authors, plugin authors, tooling builders) who do need it. `DataSievePlugin`/`DataSievePluginContext` and `createMemoryAdapter` *are* included, since configuring plugins and unit-testing DataSieve-powered code without a database are both mainstream usage, not advanced authoring.
+- Production package metadata (license, repository+directory, homepage, bugs, keywords, `publishConfig.access: public`) for **all four** publishable packages, not just the new one — the first real release audit, so this was fixed everywhere at once rather than only where this milestone happened to be looking. Same for a per-package `LICENSE` file (a root-only `LICENSE` doesn't get bundled into any individual package's npm tarball).
+- `@datasieve/prisma` gained a `@prisma/client` `peerDependency` it was missing — it only had `@prisma/client` as a *dev* dependency (used to build/test the adapter itself), which is invisible to actual consumers of the published package.
+- A README covering installation, a quick-start, a Prisma-specific example, the architecture, the full ecosystem table, and a roadmap summary.
 
-**Exit criteria:** A new project can `npm install datasieve`, call `createDataSieve()`, write a `DataSieveQuery`, and get a standardized response, without installing or importing any other `@datasieve/*` package directly (adapters remain separate installs, since they carry their own peer dependencies).
+**Two issues this milestone's own verification pass caught:**
+- The workspace root `package.json` was itself named `"datasieve"` (a leftover from Milestone 1, before this package existed) — a direct name collision with the new public package inside the same pnpm workspace, silently causing `pnpm --filter datasieve` to resolve ambiguously. Renamed the root to `datasieve-monorepo` (it's `private: true` and never published, so only the workspace-internal name mattered).
+- Running `npm pack --dry-run` for real (rather than assuming the `"files"` field was sufficient) is what surfaced the missing per-package `LICENSE` files above — exactly the kind of gap that's invisible until you actually inspect the tarball a real `npm publish` would produce.
+
+**Exit criteria (met):** `pnpm build`, `pnpm typecheck`, and `pnpm test` all pass across the workspace; a new project can `npm install datasieve`, call `createDataSieve()`, write a `DataSieveQuery`, and get a standardized response without installing any other `@datasieve/*` package directly; `npm pack --dry-run` for all four publishable packages contains only production files (`dist/`, `README.md`, `LICENSE`, `package.json` — no source, tests, or config).
 
 ---
 
-## Future Milestones
+## Version 1.0 Roadmap
 
-Everything below is a long-term direction, not queued work. None of it begins until Milestone 4 is stable — sequencing it earlier would mean building against a Core/adapter contract that hasn't yet been proven by a real adapter and a real public package.
+Milestones 1–4 proved the architecture end to end: a database-agnostic language, an engine that runs it, a real adapter, and one public package tying them together. They are not, by themselves, a 1.0 — a 1.0 is a promise that the public contract (DSQL, the adapter interface, the plugin interface, `datasieve`'s own exports) won't break out from under anyone who builds on it. Getting there means proving the contract against more than one adapter and more than zero real plugins, and putting the operational scaffolding (docs, benchmarks, a versioning policy) around it that a "stable" label implies.
 
-- **Additional adapters** — Drizzle, MongoDB, MySQL, PostgreSQL (driver-level), Elasticsearch. Each is additive once the adapter contract is stable.
-- **Plugin ecosystem** — caching, soft deletes, authorization, multi-tenancy, auditing, tracing, and the public plugin API needed for third parties to build their own.
-- **Protocol helpers** — GraphQL and REST helpers that make it trivial to expose a DataSieve-powered resource over either protocol without hand-writing translation code.
-- **Performance work** — query plan analysis, execution benchmarking, and optimization passes once there is enough real usage to optimize for.
-- **Developer tooling** — devtools for inspecting a query's journey through the pipeline, a benchmark suite, a documentation website, a dedicated examples repository, and (optionally, low priority) editor tooling such as a VS Code extension.
+This section is **documentation of planned work, not implemented work** — per the roadmap's own development process, none of it begins until it's actually next in line. It supersedes the informal "Future Milestones" notes that lived here before Milestone 4; the items below are the concrete, ordered version of that same direction.
 
-These are described here so the long-term shape of the ecosystem is visible, not because any of them is scheduled.
+1. **Adapter conformance test suite.** Before building a second real adapter, extract `@datasieve/prisma`'s integration tests into a shared, adapter-agnostic behavioral suite (any `DataSieveAdapter` implementation can run it against its own storage). This is the same "define the contract before the next thing depends on it" move Milestone 2 made for the adapter interface itself — without it, "the adapter contract" is only enforced by convention, and every new adapter risks quietly drifting from what Prisma's happened to need.
+2. **Adapter feature parity.** Close the gaps `@datasieve/prisma`'s README documents today (to-many relation traversal needs an explicit quantifier on `Condition`/`SortField`; `contains`/`isNull` need field-type awareness; `having` needs to reference aggregation aliases) — likely a small, additive DSQL extension plus updated adapter translation, verified against the conformance suite from (1) so the fix is provably complete, not just "works for the case someone happened to test."
+3. **Additional adapters** — Drizzle, MongoDB, then MySQL/PostgreSQL (driver-level) and Elasticsearch, in roughly that order (closest to Prisma's relational model first). Each is additive once (1) and (2) land, built against a contract two adapters have already stress-tested rather than one.
+4. **Plugin system implementation.** Core's plugin *contract* (Milestone 2) has never been exercised by a real plugin with real needs. Before shipping reference plugins, harden it against what they actually require — most notably a way for a plugin to short-circuit execution entirely (a cache hit shouldn't still call the adapter), which was explicitly deferred in Milestone 2 to avoid designing it speculatively.
+5. **Soft delete plugin.** The simplest reference plugin (pure query rewriting, no external state) — a deliberate first plugin to validate the hardened contract from (4) with the lowest-risk case.
+6. **Authorization plugin.** Tenant/ownership-scoped query rewriting; a second, more demanding validation of the plugin contract (needs request-scoped context, not just static rewriting).
+7. **Caching plugin.** Needs the short-circuit capability from (4) plus `afterExecute` population — the plugin the contract was hardened for, built last so it's validating a settled contract rather than driving further changes to it.
+8. **Computed fields.** `@datasieve/query-language` reserved this extension point in Milestone 1 (`ComputedFieldsInput`) without wiring it through `FieldPath`, `SelectInput`, `SortInput`, or the AST — deliberately, since that's a real expansion of the type surface. Design and implement that wiring once there's real plugin/adapter experience (from 1–7) informing what a computed field actually needs to interoperate with.
+9. **Performance benchmarks.** A benchmark suite comparing DataSieve-mediated queries against hand-written equivalents (raw Prisma, raw SQL) across representative query shapes, run in CI, to catch abstraction-overhead regressions before they ship rather than after users notice.
+10. **Documentation website.** Every package has a README; there's no single place that explains DSQL's philosophy, walks through the pipeline, or cross-links the ecosystem the way `ROADMAP.md` does for contributors today. A docs site is that, for users.
+11. **Examples repository.** A separate, runnable (not just type-checked) example application — the `examples/*` directories in this repo intentionally stay minimal and type-check-only; a dedicated repo is where a full, deployable reference app belongs.
+12. **Migration guide.** For teams adopting DataSieve incrementally on an existing codebase (most realistically: an existing Prisma app) — how to introduce `sieve.query()` alongside hand-written queries without a big-bang rewrite.
+13. **Semantic versioning policy.** A written policy for what counts as breaking across a multi-package ecosystem — does adding a `QueryAST` node count as breaking for adapter authors? Does a new required plugin hook? How does `datasieve`'s own version relate to the packages it re-exports when they don't move in lockstep? This governs how every change above gets released, which is why it's listed last but should realistically be settled early — before (3)'s first additional adapter ships, at the latest.
+
+---
+
+## Beyond 1.0
+
+Longer-tail ideas that aren't required for a 1.0 label but are worth keeping visible: protocol helpers (GraphQL and REST helpers that expose a DataSieve-powered resource without hand-written translation code), devtools for inspecting a query's journey through the pipeline, and (low priority) editor tooling such as a VS Code extension. None of these are scheduled.
 
 ---
 

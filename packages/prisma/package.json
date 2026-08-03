@@ -18,6 +18,13 @@
   ],
   "sideEffects": false,
   "license": "MIT",
+  "author": {
+    "name": "RAZermenoSaracho",
+    "url": "https://github.com/RAZermenoSaracho"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "homepage": "https://github.com/RAZermenoSaracho/datasieve/tree/main/packages/prisma#readme",
   "repository": {
     "type": "git",

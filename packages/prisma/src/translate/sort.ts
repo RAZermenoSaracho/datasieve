@@ -1,4 +1,4 @@
-import type { SortNode } from "@datasieve/query-language";
+import type { SortNode } from "@razsdev/datasieve-query-language";
 import { nestPath } from "./path.js";
 
 /**

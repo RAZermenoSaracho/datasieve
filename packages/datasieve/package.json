@@ -57,9 +57,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@datasieve/core": "workspace:*",
-    "@datasieve/prisma": "workspace:*",
-    "@datasieve/query-language": "workspace:*"
+    "@razsdev/datasieve-core": "workspace:*",
+    "@razsdev/datasieve-prisma": "workspace:*",
+    "@razsdev/datasieve-query-language": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.3.5",

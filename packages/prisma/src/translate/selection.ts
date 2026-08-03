@@ -1,4 +1,4 @@
-import type { RelationNode, SelectionNode } from "@datasieve/query-language";
+import type { RelationNode, SelectionNode } from "@razsdev/datasieve-query-language";
 import type { TranslateOptions } from "./options.js";
 import { translateSort } from "./sort.js";
 import { translateFilter } from "./where.js";

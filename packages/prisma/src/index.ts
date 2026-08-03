@@ -1,14 +1,14 @@
 /**
  * @packageDocumentation
  *
- * `@datasieve/prisma` — the first DataSieve adapter.
+ * `@razsdev/datasieve-prisma` — the first DataSieve adapter.
  *
- * Translates `@datasieve/core`'s normalized `QueryAST` into Prisma
+ * Translates `@razsdev/datasieve-core`'s normalized `QueryAST` into Prisma
  * Client calls (`findMany`/`count`/`groupBy`) and Prisma's results back
  * into the shape Core expects. This package owns every Prisma-specific
  * concept (`where`, `orderBy`, `skip`/`take`/`cursor`, `select`,
- * `include`, `groupBy`/aggregate selectors) — neither `@datasieve/core`
- * nor `@datasieve/query-language` know Prisma exists.
+ * `include`, `groupBy`/aggregate selectors) — neither `@razsdev/datasieve-core`
+ * nor `@razsdev/datasieve-query-language` know Prisma exists.
  *
  * Start with {@link prismaAdapter}. See the README for supported
  * features and documented limitations.

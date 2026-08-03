@@ -3,8 +3,8 @@
   "compilerOptions": {
     "noEmit": true,
     "paths": {
-      "@datasieve/core": ["../../packages/core/src/index.ts"],
-      "@datasieve/prisma": ["../../packages/prisma/src/index.ts"]
+      "@razsdev/datasieve-core": ["../../packages/core/src/index.ts"],
+      "@razsdev/datasieve-prisma": ["../../packages/prisma/src/index.ts"]
     }
   },
   "include": ["."]

@@ -1,5 +1,5 @@
-import type { AdapterExecuteResult, DataSieveAdapter } from "@datasieve/core";
-import type { QueryAST } from "@datasieve/query-language";
+import type { AdapterExecuteResult, DataSieveAdapter } from "@razsdev/datasieve-core";
+import type { QueryAST } from "@razsdev/datasieve-query-language";
 import type { PrismaClientLike, PrismaModelDelegate } from "./delegate.js";
 import { reshapeGroupByRow, translateGrouping } from "./translate/aggregate.js";
 import type { TranslateOptions } from "./translate/options.js";
@@ -34,7 +34,7 @@ export interface PrismaAdapterOptions {
 /**
  * Creates the DataSieve adapter for Prisma: translates a normalized
  * {@link QueryAST} into Prisma Client calls and Prisma's results back
- * into the shape `@datasieve/core` expects. See the package README for
+ * into the shape `@razsdev/datasieve-core` expects. See the package README for
  * exactly what's supported and the documented gaps (to-many relation
  * traversal, `distinct: true` without a `select`, `having` on aggregated
  * values, cursor pagination for grouped queries).
@@ -82,7 +82,7 @@ function translateDistinct(distinct: QueryAST["distinct"], selection: QueryAST["
   if (Array.isArray(distinct)) return distinct;
   if (selection && selection.fields.length > 0) return selection.fields;
   throw new Error(
-    '@datasieve/prisma cannot translate `distinct: true` without an explicit `select` — Prisma requires a concrete list of fields to deduplicate on. Pass `select` alongside `distinct: true`, or pass `distinct` as an explicit field list instead.',
+    '@razsdev/datasieve-prisma cannot translate `distinct: true` without an explicit `select` — Prisma requires a concrete list of fields to deduplicate on. Pass `select` alongside `distinct: true`, or pass `distinct` as an explicit field list instead.',
   );
 }
 
@@ -128,7 +128,7 @@ async function executeGrouped(
     throw new Error("executeGrouped requires ast.grouping to be set.");
   }
   if (ast.pagination?.kind === "cursor") {
-    throw new Error("@datasieve/prisma does not support cursor pagination for grouped/aggregated queries.");
+    throw new Error("@razsdev/datasieve-prisma does not support cursor pagination for grouped/aggregated queries.");
   }
 
   const { by, having, aggregateSelectors } = translateGrouping(grouping, ast.aggregations, options);

@@ -1,5 +1,5 @@
-import { createDataSieve } from "@datasieve/core";
-import { ParseError, QueryValidationError, type DataSieveQuery } from "@datasieve/query-language";
+import { createDataSieve } from "@razsdev/datasieve-core";
+import { ParseError, QueryValidationError, type DataSieveQuery } from "@razsdev/datasieve-query-language";
 import { describe, expect, test } from "vitest";
 import { prismaAdapter } from "../src/adapter.js";
 import { prisma } from "./client.js";

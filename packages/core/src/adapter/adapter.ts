@@ -1,4 +1,4 @@
-import type { QueryAST } from "@datasieve/query-language";
+import type { QueryAST } from "@razsdev/datasieve-query-language";
 
 /**
  * What an adapter reports back after executing a {@link QueryAST}.

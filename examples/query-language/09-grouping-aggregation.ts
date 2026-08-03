@@ -4,7 +4,7 @@
  * not required to execute them yet, but the shape is stable so a future
  * adapter release won't need a breaking change here.
  */
-import type { DataSieveQuery } from "@datasieve/query-language";
+import type { DataSieveQuery } from "@razsdev/datasieve-query-language";
 import type { Order } from "./domain.js";
 
 const revenueByStatus: DataSieveQuery<Order> = {

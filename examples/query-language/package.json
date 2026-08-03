@@ -1,5 +1,5 @@
 {
-  "name": "@datasieve/example-query-language",
+  "name": "@razsdev/datasieve-example-query-language",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +7,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@datasieve/query-language": "workspace:*",
+    "@razsdev/datasieve-query-language": "workspace:*",
     "typescript": "^5.7.3"
   }
 }

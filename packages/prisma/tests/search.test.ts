@@ -1,4 +1,4 @@
-import { normalizeQuery, type DataSieveQuery } from "@datasieve/query-language";
+import { normalizeQuery, type DataSieveQuery } from "@razsdev/datasieve-query-language";
 import { describe, expect, test } from "vitest";
 import { prismaAdapter } from "../src/adapter.js";
 import { prisma } from "./client.js";

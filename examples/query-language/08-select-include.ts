@@ -3,7 +3,7 @@
  * `User`'s scalar fields; relations (`profile`, `orders`) are eagerly
  * loaded through `include` instead, each with its own scoped query.
  */
-import type { DataSieveQuery } from "@datasieve/query-language";
+import type { DataSieveQuery } from "@razsdev/datasieve-query-language";
 import type { User } from "./domain.js";
 
 const query: DataSieveQuery<User> = {

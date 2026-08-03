@@ -3,7 +3,7 @@
   "compilerOptions": {
     "noEmit": true,
     "paths": {
-      "@datasieve/query-language": ["../../packages/query-language/src/index.ts"]
+      "@razsdev/datasieve-query-language": ["../../packages/query-language/src/index.ts"]
     }
   },
   "include": ["."]

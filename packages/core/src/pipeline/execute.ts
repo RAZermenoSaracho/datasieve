@@ -7,7 +7,7 @@ import {
   type DataSieveQuery,
   type PaginationInput,
   type QueryAST,
-} from "@datasieve/query-language";
+} from "@razsdev/datasieve-query-language";
 import type { AdapterExecuteResult, DataSieveAdapter } from "../adapter/adapter.js";
 import { DataSieveExecutionError } from "../errors/errors.js";
 import type { DataSievePlugin, DataSievePluginContext } from "../plugin/plugin.js";
@@ -20,7 +20,7 @@ export interface ExecuteQueryOptions<TResource> {
   adapter: DataSieveAdapter<TResource>;
   plugins: readonly DataSievePlugin[];
   resource: TResource;
-  /** Untrusted input — see `@datasieve/query-language`'s `parseQuery`. */
+  /** Untrusted input — see `@razsdev/datasieve-query-language`'s `parseQuery`. */
   query: unknown;
   /** Applied when the query omits `pagination`. */
   defaultPageSize: number;
@@ -41,7 +41,7 @@ export interface ExecuteQueryOptions<TResource> {
  * than inlined into the engine) so the pipeline itself — independent of
  * how an engine instance is constructed — is directly testable.
  *
- * Parse/validation failures come from `@datasieve/query-language`
+ * Parse/validation failures come from `@razsdev/datasieve-query-language`
  * untouched (`ParseError`/`QueryValidationError`) and are never seen by
  * the adapter. Adapter failures are wrapped in
  * {@link DataSieveExecutionError}. Either way, every plugin's `onError`

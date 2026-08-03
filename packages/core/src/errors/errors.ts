@@ -2,7 +2,7 @@
  * Thrown when a {@link DataSieveAdapter}'s `execute` rejects. Wraps the
  * original error as `cause` and records which adapter failed, so
  * application error handling can distinguish "the query was malformed"
- * (a `ParseError`/`QueryValidationError` from `@datasieve/query-language`,
+ * (a `ParseError`/`QueryValidationError` from `@razsdev/datasieve-query-language`,
  * thrown before any adapter is ever reached) from "a well-formed query
  * failed to execute" (this error).
  */

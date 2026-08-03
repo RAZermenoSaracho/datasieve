@@ -1,5 +1,5 @@
 {
-  "name": "@datasieve/example-prisma",
+  "name": "@razsdev/datasieve-example-prisma",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,9 +8,9 @@
     "typecheck": "prisma generate && tsc --noEmit"
   },
   "devDependencies": {
-    "@datasieve/core": "workspace:*",
-    "@datasieve/prisma": "workspace:*",
-    "@datasieve/query-language": "workspace:*",
+    "@razsdev/datasieve-core": "workspace:*",
+    "@razsdev/datasieve-prisma": "workspace:*",
+    "@razsdev/datasieve-query-language": "workspace:*",
     "@prisma/client": "5.20.0",
     "prisma": "5.20.0",
     "typescript": "^5.7.3"

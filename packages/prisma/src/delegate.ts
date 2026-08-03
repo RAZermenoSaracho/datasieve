@@ -5,8 +5,8 @@
  * generated types): the arguments this adapter builds are assembled
  * dynamically from a {@link QueryAST}, so they can never be checked
  * against a specific model's exact generated argument type at compile
- * time anyway — the same reason `@datasieve/query-language`'s
- * `normalizeQuery` and `@datasieve/core`'s `buildResponse` each have
+ * time anyway — the same reason `@razsdev/datasieve-query-language`'s
+ * `normalizeQuery` and `@razsdev/datasieve-core`'s `buildResponse` each have
  * exactly one generic-erasure boundary. This is this adapter's.
  *
  * `resource` arrives at {@link prismaAdapter}'s `execute` typed as

@@ -35,7 +35,7 @@ export interface DataSieveEngine<TResource = unknown> {
 
 /**
  * Creates a DataSieve engine bound to one adapter and plugin set. This is
- * the package's main entry point — everything else in `@datasieve/core`
+ * the package's main entry point — everything else in `@razsdev/datasieve-core`
  * exists in service of making this one function's contract (adapter in,
  * standardized responses out) hold for any storage technology.
  *

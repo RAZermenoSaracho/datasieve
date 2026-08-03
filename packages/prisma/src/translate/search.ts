@@ -1,4 +1,4 @@
-import type { SearchNode } from "@datasieve/query-language";
+import type { SearchNode } from "@razsdev/datasieve-query-language";
 import { nestPath } from "./path.js";
 import type { TranslateOptions } from "./options.js";
 

@@ -2,7 +2,7 @@
  * Sorting: an ordered list of sort instructions, single or multi-key,
  * over any field path (including nested ones).
  */
-import type { DataSieveQuery } from "@datasieve/query-language";
+import type { DataSieveQuery } from "@razsdev/datasieve-query-language";
 import type { User } from "./domain.js";
 
 const singleKey: DataSieveQuery<User> = {

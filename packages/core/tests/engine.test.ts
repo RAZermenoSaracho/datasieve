@@ -1,4 +1,4 @@
-import { ParseError, QueryValidationError, type DataSieveQuery } from "@datasieve/query-language";
+import { ParseError, QueryValidationError, type DataSieveQuery } from "@razsdev/datasieve-query-language";
 import { describe, expect, test, vi } from "vitest";
 import type { DataSieveAdapter } from "../src/adapter/adapter.js";
 import { DataSieveExecutionError } from "../src/errors/errors.js";

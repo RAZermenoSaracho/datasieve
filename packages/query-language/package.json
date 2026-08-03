@@ -1,5 +1,5 @@
 {
-  "name": "@datasieve/query-language",
+  "name": "@razsdev/datasieve-query-language",
   "version": "0.1.0",
   "description": "DSQL — the database-agnostic query language at the core of DataSieve.",
   "type": "module",

@@ -1,4 +1,4 @@
-import type { ConditionNode, FilterNode, Operator } from "@datasieve/query-language";
+import type { ConditionNode, FilterNode, Operator } from "@razsdev/datasieve-query-language";
 import { nestPath } from "./path.js";
 import type { TranslateOptions } from "./options.js";
 
@@ -95,6 +95,6 @@ export function translateOperator(op: Operator, value: unknown, options: Transla
       return { none: {} };
     case "childOf":
     case "parentOf":
-      throw new Error(`@datasieve/prisma does not support the reserved "${op}" operator.`);
+      throw new Error(`@razsdev/datasieve-prisma does not support the reserved "${op}" operator.`);
   }
 }

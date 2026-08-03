@@ -1,4 +1,4 @@
-import type { DataSieveQuery, QueryAST } from "@datasieve/query-language";
+import type { DataSieveQuery, QueryAST } from "@razsdev/datasieve-query-language";
 import type { AdapterExecuteResult } from "../adapter/adapter.js";
 import type { DataSieveResponse } from "../response/response.js";
 
@@ -32,7 +32,7 @@ export interface DataSievePluginContext {
  * line — see `pipeline/middleware.ts`'s `runHooks`.
  *
  * The query the user supplied is parsed and validated by
- * `@datasieve/query-language` *before* any plugin sees it, so plugins
+ * `@razsdev/datasieve-query-language` *before* any plugin sees it, so plugins
  * only ever operate on an already-valid query — they augment trusted
  * internal logic, they don't re-implement input validation.
  *
@@ -80,7 +80,7 @@ export interface DataSievePlugin {
   afterTransform?<T>(response: DataSieveResponse<T>, ctx: DataSievePluginContext): Awaitable<DataSieveResponse<T> | void>;
   /**
    * Notified when any pipeline stage throws (parse/validate errors from
-   * `@datasieve/query-language`, adapter errors, or another plugin's
+   * `@razsdev/datasieve-query-language`, adapter errors, or another plugin's
    * hook throwing). Purely an observer — throwing here does not change
    * or suppress the original error, which is always rethrown after every
    * plugin's `onError` has run.

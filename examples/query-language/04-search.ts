@@ -2,7 +2,7 @@
  * Free-text search: independent from `where`, and restricted at the type
  * level to string-valued fields only.
  */
-import type { DataSieveQuery } from "@datasieve/query-language";
+import type { DataSieveQuery } from "@razsdev/datasieve-query-language";
 import type { User } from "./domain.js";
 
 const query: DataSieveQuery<User> = {

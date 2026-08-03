@@ -1,10 +1,10 @@
 /**
- * Wiring @datasieve/prisma up: one PrismaClient, one prismaAdapter, one
+ * Wiring @razsdev/datasieve-prisma up: one PrismaClient, one prismaAdapter, one
  * createDataSieve() engine — reused across every model in your schema.
  */
 import { PrismaClient } from "@prisma/client";
-import { createDataSieve } from "@datasieve/core";
-import { prismaAdapter } from "@datasieve/prisma";
+import { createDataSieve } from "@razsdev/datasieve-core";
+import { prismaAdapter } from "@razsdev/datasieve-prisma";
 
 const prisma = new PrismaClient();
 

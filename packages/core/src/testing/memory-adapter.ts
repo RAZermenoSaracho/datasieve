@@ -7,7 +7,7 @@ import type {
   SearchNode,
   SelectionNode,
   SortNode,
-} from "@datasieve/query-language";
+} from "@razsdev/datasieve-query-language";
 import type { AdapterExecuteResult, DataSieveAdapter } from "../adapter/adapter.js";
 
 /** Options accepted by {@link createMemoryAdapter}. */
@@ -20,7 +20,7 @@ export interface MemoryAdapterOptions {
  * A reference `DataSieveAdapter` that interprets a {@link QueryAST}
  * directly against a plain in-memory array — no database involved.
  *
- * This exists for two reasons: it is what proves `@datasieve/core`'s
+ * This exists for two reasons: it is what proves `@razsdev/datasieve-core`'s
  * pipeline and adapter contract work end to end without requiring a real
  * adapter (see the roadmap's Milestone 2 exit criteria), and it is a
  * genuinely useful tool for testing DataSieve-powered application code
@@ -38,7 +38,7 @@ export interface MemoryAdapterOptions {
  * - `include`/`groupBy`/`aggregations` are not executed — relations
  *   require an adapter that understands how to join, and
  *   grouping/aggregation execution remains a reserved, adapter-level
- *   concern per `@datasieve/query-language`'s own milestone.
+ *   concern per `@razsdev/datasieve-query-language`'s own milestone.
  * - The reserved `childOf`/`parentOf` operators throw, since they are
  *   not yet interpreted anywhere in DataSieve.
  *

@@ -1,4 +1,4 @@
-import type { PaginationNode } from "@datasieve/query-language";
+import type { PaginationNode } from "@razsdev/datasieve-query-language";
 
 /** Cursor-pagination-specific options; see {@link prismaAdapter}. */
 export interface CursorOptions {
@@ -24,7 +24,7 @@ export type PaginationArgs = Record<string, unknown>;
  * row" trick — requesting `take + 1` rows so {@link resolveCursorPage}
  * can tell whether another page exists without a second query. No
  * `total`/count is computed for cursor pagination (matching
- * `@datasieve/core`'s own documented allowance for cursor setups to skip
+ * `@razsdev/datasieve-core`'s own documented allowance for cursor setups to skip
  * counting for performance).
  */
 export function buildPaginationArgs(pagination: PaginationNode, cursor: CursorOptions): PaginationArgs {

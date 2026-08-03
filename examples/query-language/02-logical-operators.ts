@@ -2,7 +2,7 @@
  * Logical operators: `and`/`or`/`not` nest to unbounded depth, exactly
  * matching the shape from the DSQL design brief.
  */
-import type { DataSieveQuery } from "@datasieve/query-language";
+import type { DataSieveQuery } from "@razsdev/datasieve-query-language";
 import type { User } from "./domain.js";
 
 const query: DataSieveQuery<User> = {

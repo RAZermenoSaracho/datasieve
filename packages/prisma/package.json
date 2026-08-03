@@ -1,5 +1,5 @@
 {
-  "name": "@datasieve/prisma",
+  "name": "@razsdev/datasieve-prisma",
   "version": "0.1.0",
   "description": "The first DataSieve adapter: translates DSQL's QueryAST into Prisma Client calls.",
   "type": "module",
@@ -58,8 +58,8 @@
     "typecheck": "prisma generate && tsc --noEmit"
   },
   "dependencies": {
-    "@datasieve/core": "workspace:*",
-    "@datasieve/query-language": "workspace:*"
+    "@razsdev/datasieve-core": "workspace:*",
+    "@razsdev/datasieve-query-language": "workspace:*"
   },
   "devDependencies": {
     "@prisma/client": "5.20.0",

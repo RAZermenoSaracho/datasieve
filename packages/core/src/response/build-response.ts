@@ -1,4 +1,4 @@
-import type { PaginationInput } from "@datasieve/query-language";
+import type { PaginationInput } from "@razsdev/datasieve-query-language";
 import type { AdapterExecuteResult } from "../adapter/adapter.js";
 import type { DataSieveResponse } from "./response.js";
 
@@ -13,7 +13,7 @@ import type { DataSieveResponse } from "./response.js";
  * `result.data` is trusted to already be shaped like `T` — the adapter's
  * `TRaw` and the query's `T` are the application's responsibility to
  * keep aligned (an adapter queries whatever resource the application
- * passed in), the same way `normalizeQuery` in `@datasieve/query-language`
+ * passed in), the same way `normalizeQuery` in `@razsdev/datasieve-query-language`
  * treats its one generic-erasure boundary.
  *
  * @example

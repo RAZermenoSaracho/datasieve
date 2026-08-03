@@ -1,14 +1,14 @@
 /**
  * @packageDocumentation
  *
- * `@datasieve/core` — the DataSieve query engine.
+ * `@razsdev/datasieve-core` — the DataSieve query engine.
  *
- * This package turns a `DataSieveQuery` (from `@datasieve/query-language`)
+ * This package turns a `DataSieveQuery` (from `@razsdev/datasieve-query-language`)
  * into a standardized `DataSieveResponse`, by way of one storage adapter
  * and any number of plugins — without ever knowing what kind of storage
  * answered the query. It contains the adapter contract, the execution
  * pipeline, the plugin/middleware system, and the response contract.
- * It contains no adapters of its own (see `@datasieve/prisma` and future
+ * It contains no adapters of its own (see `@razsdev/datasieve-prisma` and future
  * adapter packages) beyond the reference in-memory adapter under
  * `testing/`, which exists to prove and test this package, not to be a
  * production adapter.
@@ -43,9 +43,9 @@ export { DataSieveExecutionError } from "./errors/errors.js";
 export { createMemoryAdapter } from "./testing/memory-adapter.js";
 export type { MemoryAdapterOptions } from "./testing/memory-adapter.js";
 
-// Convenience re-exports from @datasieve/query-language — the types most
+// Convenience re-exports from @razsdev/datasieve-query-language — the types most
 // consumers of this package need are re-exported here so a typical
-// application only needs to import from @datasieve/core.
+// application only needs to import from @razsdev/datasieve-core.
 export {
   DataSieveError,
   normalizeQuery,
@@ -53,5 +53,5 @@ export {
   parseQuery,
   QueryValidationError,
   validateQuery,
-} from "@datasieve/query-language";
-export type { DataSieveIssue, DataSieveQuery, ParseResult, QueryAST, ValidationResult } from "@datasieve/query-language";
+} from "@razsdev/datasieve-query-language";
+export type { DataSieveIssue, DataSieveQuery, ParseResult, QueryAST, ValidationResult } from "@razsdev/datasieve-query-language";

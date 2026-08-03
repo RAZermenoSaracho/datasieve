@@ -5,7 +5,7 @@
  * Once `field` is chosen, `op` is narrowed to operators valid for that
  * field's type, and `value` is narrowed to match.
  */
-import type { Condition, DataSieveQuery } from "@datasieve/query-language";
+import type { Condition, DataSieveQuery } from "@razsdev/datasieve-query-language";
 import type { User } from "./domain.js";
 
 const activeUsers: DataSieveQuery<User> = {

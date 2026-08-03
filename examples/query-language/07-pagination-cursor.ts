@@ -6,7 +6,7 @@
  * the same standardized response contract (see `CLAUDE.md`), so switching
  * between them is not a breaking change for a consumer.
  */
-import type { DataSieveQuery } from "@datasieve/query-language";
+import type { DataSieveQuery } from "@razsdev/datasieve-query-language";
 import type { User } from "./domain.js";
 
 const firstPage: DataSieveQuery<User> = {

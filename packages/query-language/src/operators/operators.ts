@@ -38,7 +38,7 @@ export interface OperatorDefinition {
  *
  * @example
  * ```ts
- * import { OPERATORS } from "@datasieve/query-language";
+ * import { OPERATORS } from "@razsdev/datasieve-query-language";
  *
  * OPERATORS["between"].arity; // "range"
  * ```

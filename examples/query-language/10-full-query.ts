@@ -4,7 +4,7 @@
  * `parseQuery`/`validateQuery`, into `normalizeQuery`, and out as a
  * `QueryAST` for an adapter to execute.
  */
-import { normalizeQuery, parseQuery, validateQuery, type DataSieveQuery } from "@datasieve/query-language";
+import { normalizeQuery, parseQuery, validateQuery, type DataSieveQuery } from "@razsdev/datasieve-query-language";
 import type { User } from "./domain.js";
 
 const query: DataSieveQuery<User> = {

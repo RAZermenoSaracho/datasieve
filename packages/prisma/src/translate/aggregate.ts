@@ -1,4 +1,4 @@
-import type { AggregationNode, GroupingNode } from "@datasieve/query-language";
+import type { AggregationNode, GroupingNode } from "@razsdev/datasieve-query-language";
 import type { TranslateOptions } from "./options.js";
 import { translateFilter } from "./where.js";
 
@@ -23,7 +23,7 @@ export interface GroupByTranslation {
  * wrapped as `{ total: { _sum: { gt: 1000 } } }`, keyed by aggregation
  * alias). Resolving that needs `having` to reference aggregation aliases,
  * which `GroupByInput.having` doesn't yet support — see its TSDoc in
- * `@datasieve/query-language` for why this was deliberately left as a
+ * `@razsdev/datasieve-query-language` for why this was deliberately left as a
  * future refinement rather than solved here.
  */
 export function translateGrouping(

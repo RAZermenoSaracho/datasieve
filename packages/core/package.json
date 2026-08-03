@@ -1,5 +1,5 @@
 {
-  "name": "@datasieve/core",
+  "name": "@razsdev/datasieve-core",
   "version": "0.1.0",
   "description": "The DataSieve query engine: adapter contracts, the execution pipeline, plugins, and the standardized response contract.",
   "type": "module",
@@ -55,7 +55,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@datasieve/query-language": "workspace:*"
+    "@razsdev/datasieve-query-language": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.3.5",

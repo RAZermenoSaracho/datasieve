@@ -3,9 +3,9 @@
  * switching strategy doesn't change the response contract.
  */
 import { PrismaClient } from "@prisma/client";
-import { createDataSieve } from "@datasieve/core";
-import { prismaAdapter } from "@datasieve/prisma";
-import type { DataSieveQuery } from "@datasieve/query-language";
+import { createDataSieve } from "@razsdev/datasieve-core";
+import { prismaAdapter } from "@razsdev/datasieve-prisma";
+import type { DataSieveQuery } from "@razsdev/datasieve-query-language";
 import type { User } from "./domain.js";
 
 const prisma = new PrismaClient();

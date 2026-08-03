@@ -12,6 +12,8 @@ npm install @datasieve/core @datasieve/prisma @prisma/client
 
 `prisma`/`@prisma/client` are peer expectations of this package (you already have them if you're using Prisma) rather than bundled dependencies, so your project controls its own Prisma version.
 
+**Tested against Prisma 5.x** (the classic `prisma-client-js` generator with an inline `datasource.url`). The `peerDependencies` range (`>=5.0.0`) is a structural claim, not an empirical one — Prisma 7 introduced a new default client generator and moved the datasource URL out of `schema.prisma` into `prisma.config.ts`, which this package hasn't been validated against. If you're starting a new project with `npx prisma init`, pin `prisma`/`@prisma/client` to a 5.x or 6.x release until this is verified on 7.
+
 ## Setup
 
 ```ts

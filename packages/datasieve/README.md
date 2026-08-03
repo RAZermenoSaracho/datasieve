@@ -44,6 +44,8 @@ result.meta; // { total, page, pageSize, pageCount, hasNext, hasPrevious, cursor
 `query` can also be `unknown` — a decoded request body/query string — since `sieve.query()` parses and validates it before ever touching Prisma:
 
 ```ts
+import { ParseError, QueryValidationError } from "datasieve";
+
 app.get("/users", async (req, res) => {
   try {
     res.json(await sieve.query<User>({ resource: prisma.user, query: req.query }));
@@ -61,6 +63,14 @@ app.get("/users", async (req, res) => {
 One engine, reused across every model in your schema — `resource` picks which one per call:
 
 ```ts
+interface Order {
+  id: string;
+  total: number;
+  status: string;
+  createdAt: Date;
+  user: { id: string; name: string };
+}
+
 const activeOrders = await sieve.query<Order>({
   resource: prisma.order,
   query: {

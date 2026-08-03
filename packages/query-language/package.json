@@ -17,6 +17,29 @@
     "dist"
   ],
   "sideEffects": false,
+  "license": "MIT",
+  "homepage": "https://github.com/RAZermenoSaracho/datasieve/tree/main/packages/query-language#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RAZermenoSaracho/datasieve.git",
+    "directory": "packages/query-language"
+  },
+  "bugs": {
+    "url": "https://github.com/RAZermenoSaracho/datasieve/issues"
+  },
+  "keywords": [
+    "datasieve",
+    "query",
+    "query-language",
+    "dsql",
+    "filtering",
+    "sorting",
+    "pagination",
+    "typescript"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

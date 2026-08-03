@@ -17,6 +17,30 @@
     "dist"
   ],
   "sideEffects": false,
+  "license": "MIT",
+  "homepage": "https://github.com/RAZermenoSaracho/datasieve/tree/main/packages/prisma#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RAZermenoSaracho/datasieve.git",
+    "directory": "packages/prisma"
+  },
+  "bugs": {
+    "url": "https://github.com/RAZermenoSaracho/datasieve/issues"
+  },
+  "keywords": [
+    "datasieve",
+    "prisma",
+    "adapter",
+    "orm",
+    "query",
+    "typescript"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@prisma/client": ">=5.0.0"
+  },
   "scripts": {
     "generate": "prisma generate",
     "db:push": "prisma db push --skip-generate --force-reset",

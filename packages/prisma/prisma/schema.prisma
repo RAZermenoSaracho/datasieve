@@ -1,0 +1,52 @@
+// Test-only schema for @datasieve/prisma's own test suite. Not shipped —
+// this is what proves the adapter against a real database, not a schema
+// for consumers to use.
+//
+// SQLite is used for speed/portability in CI and local runs. It has two
+// consequences worth knowing when reading the tests:
+// - Prisma does not support native enums on SQLite, so enum-like fields
+//   (User.status, Order.status) are plain `String`s here. The adapter
+//   itself has no opinion on this — it translates whatever field values
+//   DSQL gives it — so this is a schema/provider choice, not a
+//   DataSieve limitation.
+// - SQLite's default `LIKE` is already ASCII-case-insensitive, which is
+//   why `ilike` tests pass here even though Prisma's `mode: "insensitive"`
+//   filter option (used for `ilike`) is a no-op on SQLite (Postgres/MySQL
+//   only). See the package README's "Supported features" section.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  status    String
+  age       Int
+  bio       String?
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  profile   Profile?
+  orders    Order[]
+}
+
+model Profile {
+  id     String @id @default(cuid())
+  region String
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Order {
+  id        String   @id @default(cuid())
+  total     Float
+  status    String
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}

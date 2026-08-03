@@ -1,0 +1,40 @@
+{
+  "name": "@datasieve/prisma",
+  "version": "0.1.0",
+  "description": "The first DataSieve adapter: translates DSQL's QueryAST into Prisma Client calls.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate --force-reset",
+    "build": "prisma generate && tsup",
+    "dev": "tsup --watch",
+    "test": "prisma generate && prisma db push --skip-generate --force-reset && vitest run",
+    "test:watch": "prisma generate && vitest",
+    "typecheck": "prisma generate && tsc --noEmit"
+  },
+  "dependencies": {
+    "@datasieve/core": "workspace:*",
+    "@datasieve/query-language": "workspace:*"
+  },
+  "devDependencies": {
+    "@prisma/client": "5.20.0",
+    "prisma": "5.20.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

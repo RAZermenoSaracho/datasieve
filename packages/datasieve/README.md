@@ -4,7 +4,7 @@
 
 DataSieve is not an ORM, not a query builder, and not a Prisma wrapper. Those answer "how do I talk to this specific database?" DataSieve answers a different question: how does an application describe filtering, sorting, pagination, search, grouping, and aggregation *once*, regardless of which database eventually answers it?
 
-This package (`datasieve`) is the recommended way to install it — a small, curated re-export of the ecosystem's stable public API. Advanced use cases (writing a custom adapter, authoring a plugin, building tooling on top of DataSieve) can install the underlying `@datasieve/*` packages directly; see [Ecosystem](#ecosystem) below.
+This package (`datasieve`) is the recommended way to install it — a small, curated re-export of the ecosystem's stable public API. Advanced use cases (writing a custom adapter, authoring a plugin, building tooling on top of DataSieve) can install the underlying `@razsdev/*` packages directly; see [Ecosystem](#ecosystem) below.
 
 ## Installation
 
@@ -82,7 +82,7 @@ const activeOrders = await sieve.query<Order>({
 });
 ```
 
-See `@datasieve/prisma`'s README for the full list of supported features and its documented limitations (e.g. filtering through to-many relations isn't yet expressible in DSQL).
+See `@razsdev/datasieve-prisma`'s README for the full list of supported features and its documented limitations (e.g. filtering through to-many relations isn't yet expressible in DSQL).
 
 ## Architecture
 
@@ -104,9 +104,9 @@ The query language (DSQL) is entirely database-agnostic — it never mentions SQ
 | Package | For |
 |---|---|
 | **`datasieve`** (this package) | Almost everyone. `createDataSieve`, `prismaAdapter`, and the full query language. |
-| [`@datasieve/query-language`](https://www.npmjs.com/package/@datasieve/query-language) | Building tooling around DSQL itself (validators, codegen, a query builder UI) without pulling in the engine. |
-| [`@datasieve/core`](https://www.npmjs.com/package/@datasieve/core) | Writing your own adapter or plugin, or needing the reference in-memory adapter's full API. |
-| [`@datasieve/prisma`](https://www.npmjs.com/package/@datasieve/prisma) | Direct access to the Prisma adapter's translation internals (advanced/debugging use). |
+| [`@razsdev/datasieve-query-language`](https://www.npmjs.com/package/@razsdev/datasieve-query-language) | Building tooling around DSQL itself (validators, codegen, a query builder UI) without pulling in the engine. |
+| [`@razsdev/datasieve-core`](https://www.npmjs.com/package/@razsdev/datasieve-core) | Writing your own adapter or plugin, or needing the reference in-memory adapter's full API. |
+| [`@razsdev/datasieve-prisma`](https://www.npmjs.com/package/@razsdev/datasieve-prisma) | Direct access to the Prisma adapter's translation internals (advanced/debugging use). |
 
 Every adapter and plugin is an independent, optional package — installing `datasieve` never pulls in a database driver or ORM you don't use beyond Prisma's own client, which is a peer dependency, not bundled.
 

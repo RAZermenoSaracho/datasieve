@@ -1,4 +1,4 @@
-// Test-only schema for @datasieve/prisma's own test suite. Not shipped —
+// Test-only schema for @razsdev/datasieve-prisma's own test suite. Not shipped —
 // this is what proves the adapter against a real database, not a schema
 // for consumers to use.
 //

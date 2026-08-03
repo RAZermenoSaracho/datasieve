@@ -1,6 +1,6 @@
-# @datasieve/core
+# @razsdev/datasieve-core
 
-The DataSieve query engine. Turns a `DataSieveQuery` (from `@datasieve/query-language`) into a standardized response, by way of one storage adapter and any number of plugins — without ever knowing what kind of storage answered the query.
+The DataSieve query engine. Turns a `DataSieveQuery` (from `@razsdev/datasieve-query-language`) into a standardized response, by way of one storage adapter and any number of plugins — without ever knowing what kind of storage answered the query.
 
 See `ROADMAP.md` and `CLAUDE.md` at the repo root for the full architectural context. This package implements Milestone 2.
 
@@ -16,7 +16,7 @@ See `ROADMAP.md` and `CLAUDE.md` at the repo root for the full architectural con
 ## Example
 
 ```ts
-import { createDataSieve, createMemoryAdapter } from "@datasieve/core";
+import { createDataSieve, createMemoryAdapter } from "@razsdev/datasieve-core";
 
 interface User {
   id: string;

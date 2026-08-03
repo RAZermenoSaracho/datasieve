@@ -1,13 +1,13 @@
-# @datasieve/prisma
+# @razsdev/datasieve-prisma
 
-The first DataSieve adapter. Translates `@datasieve/core`'s normalized `QueryAST` into [Prisma Client](https://www.prisma.io/) calls, and Prisma's results back into the shape Core expects. This package owns every Prisma-specific concept — `where`, `orderBy`, `skip`/`take`/`cursor`, `select`, `include`, `groupBy`/aggregate selectors — so that neither `@datasieve/core` nor `@datasieve/query-language` ever need to know Prisma exists.
+The first DataSieve adapter. Translates `@razsdev/datasieve-core`'s normalized `QueryAST` into [Prisma Client](https://www.prisma.io/) calls, and Prisma's results back into the shape Core expects. This package owns every Prisma-specific concept — `where`, `orderBy`, `skip`/`take`/`cursor`, `select`, `include`, `groupBy`/aggregate selectors — so that neither `@razsdev/datasieve-core` nor `@razsdev/datasieve-query-language` ever need to know Prisma exists.
 
 See `ROADMAP.md` and `CLAUDE.md` at the repo root for the architectural context. This package implements Milestone 3.
 
 ## Installation
 
 ```sh
-npm install @datasieve/core @datasieve/prisma @prisma/client
+npm install @razsdev/datasieve-core @razsdev/datasieve-prisma @prisma/client
 ```
 
 `prisma`/`@prisma/client` are peer expectations of this package (you already have them if you're using Prisma) rather than bundled dependencies, so your project controls its own Prisma version.
@@ -18,8 +18,8 @@ npm install @datasieve/core @datasieve/prisma @prisma/client
 
 ```ts
 import { PrismaClient } from "@prisma/client";
-import { createDataSieve } from "@datasieve/core";
-import { prismaAdapter } from "@datasieve/prisma";
+import { createDataSieve } from "@razsdev/datasieve-core";
+import { prismaAdapter } from "@razsdev/datasieve-prisma";
 
 const prisma = new PrismaClient();
 const sieve = createDataSieve({ adapter: prismaAdapter(prisma) });
@@ -60,7 +60,7 @@ These are documented gaps, not silent wrong answers — each one either throws a
 - **`contains` always assumes a string field.** DSQL's `contains` operator also means "array contains element" for scalar-list fields (Prisma's `has`), but the adapter can't tell the two apart from the AST alone, so only the string/substring case is translated.
 - **`isNull`/`isNotNull` always use scalar semantics** (`equals: null` / `not: null`). Filtering an optional *to-one relation* for presence needs Prisma's `is`/`isNot: null` instead — not yet distinguished.
 - **`ilike` / case-insensitive `search`** only emit Prisma's `mode: "insensitive"` when `prismaAdapter(prisma, { caseInsensitiveMode: true })` is set. This defaults to `false` because `mode` is Postgres/MySQL-only — SQLite's query engine rejects it outright. SQLite's own `LIKE` is already ASCII-case-insensitive, so `ilike` still behaves reasonably there without the option.
-- **`having` only supports conditions on grouped fields**, not on aggregated values (e.g. `having: sum(total) > 1000`) — Prisma requires those wrapped per aggregation (`{ total: { _sum: { gt: 1000 } } }`), which needs `having` to reference an aggregation's alias. `GroupByInput.having` (in `@datasieve/query-language`) doesn't yet support that; see its TSDoc.
+- **`having` only supports conditions on grouped fields**, not on aggregated values (e.g. `having: sum(total) > 1000`) — Prisma requires those wrapped per aggregation (`{ total: { _sum: { gt: 1000 } } }`), which needs `having` to reference an aggregation's alias. `GroupByInput.having` (in `@razsdev/datasieve-query-language`) doesn't yet support that; see its TSDoc.
 - **`distinct: true` requires an explicit `select`.** Prisma's `distinct` needs a concrete field list; DSQL's `distinct: true` ("distinct over the current selection") only has fields to use when `select` is also present. Without one, this throws rather than guessing.
 - **Cursor pagination is not supported for grouped/aggregated queries** — throws a clear error. Prisma's `groupBy` supports `skip`/`take` (used for offset pagination on grouped queries) but not the same cursor mechanics as `findMany`.
 - **Prisma enums** aren't used by this package's own test schema (SQLite doesn't support them in Prisma) — enum-like fields are plain `String`s in tests. This is a schema/provider choice; the adapter itself has no opinion on whether your model fields are enums or strings.
@@ -71,5 +71,5 @@ This package's own tests run against a real SQLite database (see `prisma/schema.
 
 ## Extending
 
-- **A new operator, or resolving one of the limitations above**: `src/translate/where.ts` (`translateOperator`) is the place to start; see `@datasieve/query-language`'s own extension notes for adding a new operator to DSQL first if it doesn't exist yet.
+- **A new operator, or resolving one of the limitations above**: `src/translate/where.ts` (`translateOperator`) is the place to start; see `@razsdev/datasieve-query-language`'s own extension notes for adding a new operator to DSQL first if it doesn't exist yet.
 - **A different cursor field or id type**: `prismaAdapter(prisma, { cursorField: "myId", parseCursorValue: (raw) => Number(raw) })`.

@@ -24,7 +24,7 @@ Your query (DSQL)
 Three architectural commitments hold this together, and hold for every future addition to the ecosystem:
 
 - **DSQL never mentions storage.** The query language a consumer writes never references SQL, Prisma, Mongo, or any other storage concept. The moment a storage-specific idea leaks into the public API, switching storage technology becomes a breaking change for every application built on top.
-- **The engine never knows adapters exist.** `@datasieve/core` depends on nothing storage-specific; adapters depend on Core, never the reverse. Adding a new database is an additive new package, not a modification to shared, load-bearing code.
+- **The engine never knows adapters exist.** `@razsdev/datasieve-core` depends on nothing storage-specific; adapters depend on Core, never the reverse. Adding a new database is an additive new package, not a modification to shared, load-bearing code.
 - **Everything is a replaceable seam.** Storage engine, caching, authorization, validation — each is a seam a project can swap independently, which is why plugins and adapters are separate concepts from the engine itself.
 
 ## Ecosystem
@@ -32,9 +32,9 @@ Three architectural commitments hold this together, and hold for every future ad
 | Package | What it is |
 |---|---|
 | **`datasieve`** | The recommended install for almost everyone — `createDataSieve`, `prismaAdapter`, and the full query language, curated into one small public API. |
-| `@datasieve/query-language` | DSQL itself: the public query types, the operator catalog, and the internal AST — no execution, no adapters. |
-| `@datasieve/core` | The engine: the adapter contract, the execution pipeline, the plugin system, and the standardized response contract. |
-| `@datasieve/prisma` | The first adapter, translating DSQL into Prisma Client calls. |
+| `@razsdev/datasieve-query-language` | DSQL itself: the public query types, the operator catalog, and the internal AST — no execution, no adapters. |
+| `@razsdev/datasieve-core` | The engine: the adapter contract, the execution pipeline, the plugin system, and the standardized response contract. |
+| `@razsdev/datasieve-prisma` | The first adapter, translating DSQL into Prisma Client calls. |
 
 Every adapter and plugin is an independent, optional install — the ecosystem grows by addition, not by modifying what already ships.
 
@@ -46,7 +46,7 @@ Every adapter and plugin is an independent, optional install — the ecosystem g
 
 **The Prisma adapter.** Full translation of filtering, sorting, both pagination modes, `select`/`include`, search, and `groupBy`/aggregations into Prisma Client calls — validated against a real SQLite database (not mocks), 27 integration tests covering every feature and every documented edge case.
 
-**The public package.** `datasieve` re-exports a deliberately curated ~40-symbol public surface — `createDataSieve`, `prismaAdapter`, the full query language, the operator registry, the response contract, every public error class, and the in-memory testing adapter. Internal implementation details (the AST, the adapter-authoring contract, pipeline/translation internals) are intentionally left out; they remain available via the individual `@datasieve/*` packages for adapter authors, plugin authors, and tooling builders.
+**The public package.** `datasieve` re-exports a deliberately curated ~40-symbol public surface — `createDataSieve`, `prismaAdapter`, the full query language, the operator registry, the response contract, every public error class, and the in-memory testing adapter. Internal implementation details (the AST, the adapter-authoring contract, pipeline/translation internals) are intentionally left out; they remain available via the individual `@razsdev/*` packages for adapter authors, plugin authors, and tooling builders.
 
 ## Current limitations
 
@@ -56,7 +56,7 @@ Documented, not hidden — each of these fails clearly (a thrown error or a stru
 - **A few Prisma-adapter translations are narrower than DSQL's full semantics**: `contains` assumes a string field rather than distinguishing scalar-list `has`; `isNull`/`isNotNull` use scalar rather than to-one-relation semantics; `ilike`/case-insensitive search only emit Postgres/MySQL's `mode: "insensitive"` when explicitly opted into (`caseInsensitiveMode: true`) since SQLite rejects that option outright; `having` supports grouped-field conditions but not conditions on aggregated values; `distinct: true` requires an explicit `select`.
 - **Cursor pagination isn't supported for grouped/aggregated queries.**
 - **The Prisma adapter is tested against Prisma 5.x** (the classic `prisma-client-js` generator). Prisma 7's newer client generator and `prisma.config.ts` convention haven't been validated.
-- **No plugin ecosystem yet.** The plugin contract exists and is tested against synthetic plugins in `@datasieve/core`'s own test suite, but no reference plugin (cache, soft delete, authorization) has been built against it yet — see the roadmap.
+- **No plugin ecosystem yet.** The plugin contract exists and is tested against synthetic plugins in `@razsdev/datasieve-core`'s own test suite, but no reference plugin (cache, soft delete, authorization) has been built against it yet — see the roadmap.
 - **Only one adapter.** Prisma is the only storage technology DataSieve currently speaks.
 
 ## Roadmap
@@ -75,6 +75,6 @@ See `ROADMAP.md` in the repository for the full detail and reasoning behind this
 
 - Repository: https://github.com/RAZermenoSaracho/datasieve
 - Issues: https://github.com/RAZermenoSaracho/datasieve/issues
-- `@datasieve/query-language`: https://www.npmjs.com/package/@datasieve/query-language
-- `@datasieve/core`: https://www.npmjs.com/package/@datasieve/core
-- `@datasieve/prisma`: https://www.npmjs.com/package/@datasieve/prisma
+- `@razsdev/datasieve-query-language`: https://www.npmjs.com/package/@razsdev/datasieve-query-language
+- `@razsdev/datasieve-core`: https://www.npmjs.com/package/@razsdev/datasieve-core
+- `@razsdev/datasieve-prisma`: https://www.npmjs.com/package/@razsdev/datasieve-prisma

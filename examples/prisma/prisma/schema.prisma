@@ -1,6 +1,6 @@
 // Minimal schema so these examples type-check against a real generated
 // Prisma Client, the same way examples/query-language type-checks
-// against the real @datasieve/query-language package. Not queried at
+// against the real @razsdev/datasieve-query-language package. Not queried at
 // build/typecheck time — see each example file.
 generator client {
   provider = "prisma-client-js"

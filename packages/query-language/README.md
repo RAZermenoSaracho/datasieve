@@ -1,4 +1,4 @@
-# @datasieve/query-language
+# @razsdev/datasieve-query-language
 
 DSQL — the DataSieve Query Language. The public, database-agnostic language every DataSieve application writes and every adapter consumes.
 

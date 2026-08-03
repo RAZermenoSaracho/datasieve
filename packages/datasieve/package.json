@@ -1,0 +1,61 @@
+{
+  "name": "datasieve",
+  "version": "0.1.0",
+  "description": "The TypeScript-first backend data engine. Describe the data you want once, in one database-agnostic query language; DataSieve determines how to retrieve it.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "license": "MIT",
+  "homepage": "https://github.com/RAZermenoSaracho/datasieve/tree/main/packages/datasieve#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RAZermenoSaracho/datasieve.git",
+    "directory": "packages/datasieve"
+  },
+  "bugs": {
+    "url": "https://github.com/RAZermenoSaracho/datasieve/issues"
+  },
+  "keywords": [
+    "datasieve",
+    "query",
+    "query-language",
+    "filtering",
+    "sorting",
+    "pagination",
+    "search",
+    "orm",
+    "prisma",
+    "backend",
+    "typescript",
+    "dsql"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@datasieve/core": "workspace:*",
+    "@datasieve/prisma": "workspace:*",
+    "@datasieve/query-language": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3"
+  }
+}

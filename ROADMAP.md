@@ -72,7 +72,7 @@ Two splits make this pipeline sustainable as the ecosystem grows:
 | `datasieve` | The main public package most applications install. Re-exports the stable, blessed API surface from the packages below so a typical consumer never needs to think about the internal package boundaries. |
 | `@datasieve/query-language` | DSQL — the database-agnostic query language. Public query types, operator definitions, the internal AST, and parse/validate/normalize. Has no knowledge of execution, adapters, or any specific storage technology. **Completed — see Milestone 1.** |
 | `@datasieve/core` | The query engine. Defines the adapter contract, runs the execution pipeline, hosts the plugin and middleware system, and owns the standardized response contract (`DataSieveResponse<T>`). Depends on `@datasieve/query-language`; depends on nothing else in the ecosystem. **Completed — see Milestone 2.** |
-| `@datasieve/prisma` | The first adapter. Translates `QueryAST` into Prisma Client calls and Prisma results back into the shapes Core expects. Proves the Core/adapter contract works against a real, popular ORM. **Next — see Milestone 3.** |
+| `@datasieve/prisma` | The first adapter. Translates `QueryAST` into Prisma Client calls and Prisma results back into the shapes Core expects. Proves the Core/adapter contract works against a real, popular ORM. **Completed — see Milestone 3.** |
 | `@datasieve/drizzle`, `@datasieve/mongodb`, `@datasieve/mysql`, `@datasieve/postgres`, `@datasieve/elasticsearch` | Additional adapters, each translating `QueryAST` into one storage technology's native query interface. Built only after the Prisma adapter has stabilized the adapter contract, so each one is additive rather than a renegotiation of the interface. |
 | `@datasieve/plugin-cache`, `@datasieve/plugin-soft-delete`, `@datasieve/plugin-auth` | Reference plugins for common cross-cutting concerns, built against Core's plugin API. They exist both to be genuinely useful and to validate that the plugin API is expressive enough for real needs before third parties build their own. |
 
@@ -139,26 +139,29 @@ The build order is not arbitrary — each milestone exists to de-risk the one af
 
 ---
 
-### Milestone 3 — `@datasieve/prisma`
+### Milestone 3 — `@datasieve/prisma` ✅
 
-**Status:** Next
+**Status:** Completed
 
 **Goal:** Implement the first real adapter, translating `QueryAST` into Prisma Client calls.
 
 **Motivation:** Milestone 2 defines the adapter contract in the abstract, tested only against a fake. This milestone is where that contract meets reality for the first time — proving it is expressive enough to drive a real, popular ORM, and surfacing anywhere the contract was accidentally too abstract (missing something adapters need) or too concrete (assuming something only an in-memory fake could provide).
 
-**Deliverables:**
-- A `PrismaAdapter` implementing Core's adapter interface.
-- Translation of every `QueryAST` node — filters, sort, pagination, selection, relations, distinct — into Prisma's `where`/`orderBy`/`skip-take` or cursor arguments, `select`, and `include`.
-- An adapter-level test suite (against an in-memory/SQLite Prisma schema) mirroring Core's plugin and execution contract.
+**Delivered:**
+- `prismaAdapter(prisma, options?)` implementing Core's `DataSieveAdapter` — one adapter instance reusable across every model in a schema (`resource` picks the model delegate per call), consistent with `createDataSieve({ adapter: prismaAdapter(prisma) })` requiring no per-call wiring.
+- Translation of every `QueryAST` node into Prisma arguments: `filter`/`search` → `where` (`AND`/`OR`/`NOT`, all operators except reserved `childOf`/`parentOf`), `sort` → `orderBy`, offset pagination → `skip`/`take` with `total` from a `count()` run in the same `$transaction` as the page fetch, cursor pagination → Prisma's native `cursor`/signed `take` plus the standard "fetch one extra row" trick for `hasNext`/`hasPrevious`, `selection`/`relations` → `select`/`include` (unified so requesting both doesn't hit Prisma's "can't use select and include together" restriction), `grouping`/`aggregations` → `groupBy` with results reshaped into the alias-keyed rows DSQL promises.
+- A real SQLite-backed integration test suite (not mocks) — 27 tests across filtering, and/or/not, sort (incl. nested to-one paths), both pagination modes, select/include (incl. scoped nested relations), search, grouping/aggregation, and a full `createDataSieve()` + plugin end-to-end path — plus 5 type-checked usage examples.
+- A README documenting exactly what's supported and six explicit, individually-justified limitations discovered while building this (to-many relation traversal, `contains` on scalar-list fields, relation-null-check semantics, provider-specific case-insensitive matching, `having` on aggregated values, `distinct: true` without a `select`) — each backed by a real failing-fast behavior (a clear thrown error or a documented no-op), never a silent wrong answer.
 
-**Exit criteria:** The adapter passes its integration suite; zero Prisma types are importable from `@datasieve/core`; grouping/aggregation are translated where Prisma supports them, with unsupported cases failing clearly rather than silently.
+**Notable finding:** Prisma's `mode: "insensitive"` filter option — needed for `ilike`/case-insensitive search — is Postgres/MySQL-only and SQLite's query engine rejects it outright at runtime. This was caught by actually running the test suite against a real SQLite database (not by reasoning about the translation in the abstract), and is exactly the kind of gap Milestone 2's fake-adapter-only testing couldn't have surfaced — validating this milestone's own motivation. Fixed via an opt-in `caseInsensitiveMode` adapter option, defaulting to `false` (safe on every provider).
+
+**Exit criteria (met):** `pnpm build`, `pnpm typecheck`, and `pnpm test` all pass across the workspace; zero Prisma imports anywhere in `@datasieve/core`; every exported symbol has TSDoc; grouping/aggregation are translated where Prisma supports them, with unsupported cases (cursor pagination on grouped queries, `having` on aggregated values) failing clearly rather than silently. Core was reviewed against this real adapter's needs and required no changes — see the implementation summary for details.
 
 ---
 
 ### Milestone 4 — `datasieve`
 
-**Status:** Future
+**Status:** Next
 
 **Goal:** Ship the single public package most applications actually install.
 

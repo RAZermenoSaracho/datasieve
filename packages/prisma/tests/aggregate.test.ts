@@ -1,3 +1,4 @@
+import { createDataSieve } from "@razsdev/datasieve-core";
 import { normalizeQuery, type DataSieveQuery } from "@razsdev/datasieve-query-language";
 import { describe, expect, test } from "vitest";
 import { prismaAdapter } from "../src/adapter.js";
@@ -45,5 +46,27 @@ describe("prismaAdapter — grouping/aggregation", () => {
     await expect(
       run({ groupBy: { fields: ["status"] }, pagination: { kind: "cursor", take: 2 } }),
     ).rejects.toThrow(/cursor pagination for grouped/);
+  });
+
+  test("succeeds when the engine applies a default offset pagination and no sort was requested", async () => {
+    // Regression test: createDataSieve() applies `defaultPageSize` to every
+    // query that omits `pagination`, including grouped/aggregated ones. That
+    // used to reach Prisma's groupBy as bare `skip`/`take` with no `orderBy`,
+    // which Prisma rejects ("Missing fields: id") since it requires orderBy
+    // whenever skip/take is used on groupBy, and defaults it to the primary
+    // key when none is given.
+    const engine = createDataSieve({ adapter: prismaAdapter(prisma), defaultPageSize: 500 });
+
+    const result = await engine.query<Order>({
+      resource: prisma.order,
+      query: {
+        groupBy: { fields: ["status"] },
+        aggregations: [{ fn: "sum", field: "total", alias: "revenue" }],
+      },
+    });
+
+    expect(result.data).toEqual(
+      expect.arrayContaining([expect.objectContaining({ status: "PAID", revenue: 900 })]),
+    );
   });
 });

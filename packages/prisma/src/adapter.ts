@@ -133,8 +133,17 @@ async function executeGrouped(
 
   const { by, having, aggregateSelectors } = translateGrouping(grouping, ast.aggregations, options);
   const where = combineWhere(ast, options);
-  const orderBy = ast.sort.length > 0 ? translateSort(ast.sort) : undefined;
   const offset = ast.pagination?.kind === "offset" ? ast.pagination : undefined;
+  // Prisma's `groupBy` requires `orderBy` whenever `skip`/`take` is present,
+  // and every field it orders by must appear in `by` — otherwise it throws
+  // `Missing fields: id` (Prisma defaults to ordering by the primary key
+  // internally). `pagination` can reach here as an engine-applied default
+  // (see `createDataSieve`'s `defaultPageSize`) even when the caller never
+  // asked for pagination or supplied a `sort`, so this can't be left for
+  // the caller to avoid — default to ordering by the grouped fields
+  // themselves, which is always a valid `orderBy` for a `groupBy` query.
+  const orderBy =
+    ast.sort.length > 0 ? translateSort(ast.sort) : offset && by.length > 0 ? by.map((field) => ({ [field]: "asc" })) : undefined;
 
   const groupByArgs: Record<string, unknown> = {
     by,

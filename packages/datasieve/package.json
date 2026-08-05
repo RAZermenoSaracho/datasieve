@@ -1,6 +1,6 @@
 {
   "name": "datasieve",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The TypeScript-first backend data engine. Describe the data you want once, in one database-agnostic query language; DataSieve determines how to retrieve it.",
   "type": "module",
   "main": "./dist/index.cjs",

@@ -55,6 +55,33 @@ describe("createDataSieve + prismaAdapter — end to end", () => {
     expect((response.data as { id: string }[]).map((u) => u.id).sort()).toEqual(["user-ada", "user-margaret"]);
   });
 
+  test("runs unpaginated against a real database when pagination is omitted and no defaultPageSize is configured", async () => {
+    // Regression test: the Prisma adapter used to fall back to
+    // `{ page: 1, pageSize: 20 }` whenever `ast.pagination` was null,
+    // silently truncating results even when neither the query nor the
+    // engine ever asked for pagination.
+    const engine = createDataSieve({ adapter: prismaAdapter(prisma) });
+
+    const response = await engine.query<User>({ resource: prisma.user, query: {} });
+
+    expect(response.data).toHaveLength(4);
+    expect(response.meta).toMatchObject({ page: null, pageSize: null, pageCount: null });
+  });
+
+  test("does not force an id-based order when sort is omitted", async () => {
+    // Regression guard: omitting `sort` must not translate into an
+    // implicit `orderBy: { id: ... }` — it should reach Prisma as no
+    // `orderBy` at all. Asserted as a set (order is unspecified by
+    // definition when no sort is requested) rather than a fixed sequence.
+    const engine = createDataSieve({ adapter: prismaAdapter(prisma) });
+
+    const response = await engine.query<User>({ resource: prisma.user, query: {} });
+
+    expect((response.data as { id: string }[]).map((u) => u.id).sort()).toEqual(
+      ["user-ada", "user-grace", "user-linus", "user-margaret"].sort(),
+    );
+  });
+
   test("propagates parse/validation errors without ever reaching Prisma", async () => {
     const engine = createDataSieve({ adapter: prismaAdapter(prisma) });
 

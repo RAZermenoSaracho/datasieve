@@ -97,8 +97,21 @@ async function executeFind(
   const orderBy = ast.sort.length > 0 ? translateSort(ast.sort) : undefined;
   const { select, include } = buildSelection(ast.selection, ast.relations, options);
   const distinct = translateDistinct(ast.distinct, ast.selection);
-  const pagination = ast.pagination ?? { kind: "offset" as const, page: 1, pageSize: 20 };
 
+  // `ast.pagination` is `null` for a query that never requested
+  // pagination and whose engine has no `defaultPageSize` configured (see
+  // Core's `applyDefaultPagination`) — run genuinely unpaginated rather
+  // than inventing a `pageSize: 20` page, since Prisma's `findMany`
+  // returns everything when `skip`/`take` are simply omitted.
+  if (!ast.pagination) {
+    const [total, rows] = await prisma.$transaction([
+      delegate.count({ where }),
+      delegate.findMany({ where, orderBy, select, include, distinct }),
+    ]);
+    return { data: rows, total };
+  }
+
+  const pagination = ast.pagination;
   const findArgs: Record<string, unknown> = {
     where,
     orderBy,

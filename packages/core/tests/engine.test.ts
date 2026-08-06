@@ -49,6 +49,28 @@ describe("createDataSieve / engine.query", () => {
     expect(response.data).toHaveLength(1);
   });
 
+  test("runs unpaginated when a query omits pagination and no defaultPageSize is configured", async () => {
+    // Regression test: DataSieveQuery's own contract says an empty `{}`
+    // query is "unfiltered, unsorted, unpaginated" — but createDataSieve()
+    // used to force a page size of 20 even when the caller never
+    // configured `defaultPageSize`, silently truncating results.
+    const engine = createDataSieve({ adapter: createMemoryAdapter<User>() });
+
+    const response = await engine.query<User>({ resource: users, query: {} });
+
+    expect(response.data).toHaveLength(users.length);
+    expect(response.meta).toEqual({
+      total: users.length,
+      page: null,
+      pageSize: null,
+      pageCount: null,
+      hasNext: false,
+      hasPrevious: false,
+      cursor: null,
+      executionTime: expect.any(Number),
+    });
+  });
+
   test("propagates parse errors without reaching the adapter", async () => {
     const execute = vi.fn();
     const adapter: DataSieveAdapter<User[]> = { name: "spy", execute };

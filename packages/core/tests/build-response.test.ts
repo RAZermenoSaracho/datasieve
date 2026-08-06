@@ -49,6 +49,26 @@ describe("buildResponse", () => {
     });
   });
 
+  describe("no pagination", () => {
+    test("reports every field honestly null/false when pagination is undefined", () => {
+      const response = buildResponse({ data: [1, 2, 3], total: 3 }, undefined, 2);
+
+      expect(response).toEqual({
+        data: [1, 2, 3],
+        meta: {
+          total: 3,
+          page: null,
+          pageSize: null,
+          pageCount: null,
+          hasNext: false,
+          hasPrevious: false,
+          cursor: null,
+          executionTime: 2,
+        },
+      });
+    });
+  });
+
   describe("cursor pagination", () => {
     test("reports page as null and derives hasNext/hasPrevious from cursors", () => {
       const response = buildResponse(

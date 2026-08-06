@@ -22,8 +22,11 @@ export interface ExecuteQueryOptions<TResource> {
   resource: TResource;
   /** Untrusted input — see `@razsdev/datasieve-query-language`'s `parseQuery`. */
   query: unknown;
-  /** Applied when the query omits `pagination`. */
-  defaultPageSize: number;
+  /**
+   * Applied when the query omits `pagination`. `undefined` means such
+   * queries run unpaginated instead of falling back to a fixed page size.
+   */
+  defaultPageSize: number | undefined;
 }
 
 /**
@@ -65,10 +68,16 @@ export async function executeQuery<T, TResource>(
       throw new QueryValidationError("Query failed validation.", validation.issues);
     }
 
-    const queryWithDefaults: DataSieveQuery<T> = {
-      ...parsed.data,
-      pagination: applyDefaultPagination(parsed.data.pagination, defaultPageSize),
-    };
+    // Built by omitting `pagination` entirely (rather than setting it to
+    // `undefined`) when no pagination applies — `exactOptionalPropertyTypes`
+    // distinguishes "key absent" from "key present with value undefined",
+    // and only the former matches `DataSieveQuery.pagination`'s optionality.
+    const { pagination: _originalPagination, ...queryWithoutPagination } = parsed.data;
+    const resolvedPagination = applyDefaultPagination(parsed.data.pagination, defaultPageSize);
+    const queryWithDefaults: DataSieveQuery<T> =
+      resolvedPagination !== undefined
+        ? { ...queryWithoutPagination, pagination: resolvedPagination }
+        : queryWithoutPagination;
 
     // Cast: `beforeNormalize` is generic per plugin invocation (it must work for
     // any T a plugin is used with); pinning it to this call's concrete T is
@@ -135,9 +144,16 @@ async function notifyOnError(
   );
 }
 
+/**
+ * Resolves the pagination a query actually runs with: the query's own
+ * `pagination` if given, otherwise a `defaultPageSize`-based offset page
+ * if the engine was configured with one, otherwise `undefined` — meaning
+ * the query runs unpaginated (see `CreateDataSieveOptions.defaultPageSize`).
+ */
 function applyDefaultPagination(
   pagination: PaginationInput | null | undefined,
-  defaultPageSize: number,
-): PaginationInput {
-  return pagination ?? { kind: "offset", page: 1, pageSize: defaultPageSize };
+  defaultPageSize: number | undefined,
+): PaginationInput | undefined {
+  if (pagination) return pagination;
+  return defaultPageSize !== undefined ? { kind: "offset", page: 1, pageSize: defaultPageSize } : undefined;
 }

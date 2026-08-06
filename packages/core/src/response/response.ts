@@ -13,19 +13,24 @@ export interface DataSieveResponseCursor {
  * of adapter or pagination strategy — this shape is owned by Core, never
  * by an adapter (see `CLAUDE.md`'s "Standard Response").
  *
- * `total`, `page`, and `pageCount` are nullable because they honestly
- * don't always apply: cursor pagination may not have a "page number" at
- * all, and an adapter may skip counting matched records for performance.
- * `pageSize`, `hasNext`, and `hasPrevious` are always defined — Core
- * computes them centrally in `buildResponse` so adapters never have to.
+ * `total`, `page`, `pageSize`, and `pageCount` are nullable because they
+ * honestly don't always apply: cursor pagination may not have a "page
+ * number" at all, an adapter may skip counting matched records for
+ * performance, and a query that omits `pagination` against an engine
+ * with no `defaultPageSize` configured runs unpaginated entirely — every
+ * matching record comes back in `data`, and there is no page size to
+ * report. `hasNext` and `hasPrevious` are always defined — Core computes
+ * them centrally in `buildResponse` so adapters never have to (and both
+ * are `false` for an unpaginated response, since there's no next/previous
+ * page by definition).
  */
 export interface DataSieveResponseMeta {
   /** Total records matching the filter, ignoring pagination. `null` if not computed. */
   total: number | null;
-  /** 1-indexed page number. `null` for cursor-paginated queries. */
+  /** 1-indexed page number. `null` for cursor-paginated or unpaginated queries. */
   page: number | null;
-  /** Records requested per page (offset `pageSize`, or cursor `take`). */
-  pageSize: number;
+  /** Records requested per page (offset `pageSize`, or cursor `take`). `null` for an unpaginated query. */
+  pageSize: number | null;
   /** `null` when `total` is `null`, since page count can't be derived without it. */
   pageCount: number | null;
   /** Whether there is at least one more record beyond this page. */

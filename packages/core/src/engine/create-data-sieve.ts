@@ -3,15 +3,21 @@ import type { DataSievePlugin } from "../plugin/plugin.js";
 import { executeQuery } from "../pipeline/execute.js";
 import type { DataSieveResponse } from "../response/response.js";
 
-const DEFAULT_PAGE_SIZE = 20;
-
 /** Options accepted by {@link createDataSieve}. */
 export interface CreateDataSieveOptions<TResource = unknown> {
   /** The storage adapter this engine executes queries against. */
   adapter: DataSieveAdapter<TResource>;
   /** Plugins run, in order, at each pipeline stage. Defaults to none. */
   plugins?: DataSievePlugin[];
-  /** Page size applied when a query omits `pagination`. Defaults to 20. */
+  /**
+   * Page size applied when a query omits `pagination`. Omit this option
+   * entirely to run such queries unpaginated — every matching record is
+   * returned, and `meta.page`/`meta.pageSize`/`meta.pageCount` are
+   * `null` — matching `DataSieveQuery`'s own documented contract that an
+   * empty `{}` query is "unfiltered, unsorted, unpaginated." Only set
+   * this when you actually want queries that omit `pagination` to still
+   * come back capped at a fixed size.
+   */
   defaultPageSize?: number;
 }
 
@@ -55,7 +61,7 @@ export interface DataSieveEngine<TResource = unknown> {
 export function createDataSieve<TResource = unknown>(
   options: CreateDataSieveOptions<TResource>,
 ): DataSieveEngine<TResource> {
-  const { adapter, plugins = [], defaultPageSize = DEFAULT_PAGE_SIZE } = options;
+  const { adapter, plugins = [], defaultPageSize } = options;
 
   return {
     query<T>(input: DataSieveQueryInput<TResource>) {

@@ -26,14 +26,42 @@ import type { DataSieveResponse } from "./response.js";
  * // response.meta -> { total: 42, page: 1, pageSize: 20, pageCount: 3,
  * //                     hasNext: true, hasPrevious: false, cursor: null, executionTime: 3.2 }
  * ```
+ *
+ * `pagination` is `undefined` for a query that omitted `pagination`
+ * against an engine with no `defaultPageSize` configured — it ran
+ * unpaginated, and `meta` reports that honestly rather than inventing a
+ * page:
+ *
+ * @example
+ * ```ts
+ * const response = buildResponse<User>({ data: rows, total: 3 }, undefined, 1.1);
+ * // response.meta -> { total: 3, page: null, pageSize: null, pageCount: null,
+ * //                     hasNext: false, hasPrevious: false, cursor: null, executionTime: 1.1 }
+ * ```
  */
 export function buildResponse<T>(
   result: AdapterExecuteResult,
-  pagination: PaginationInput,
+  pagination: PaginationInput | undefined,
   executionTime: number,
 ): DataSieveResponse<T> {
   const total = result.total ?? null;
   const data = result.data as T[];
+
+  if (!pagination) {
+    return {
+      data,
+      meta: {
+        total,
+        page: null,
+        pageSize: null,
+        pageCount: null,
+        hasNext: false,
+        hasPrevious: false,
+        cursor: null,
+        executionTime,
+      },
+    };
+  }
 
   if (pagination.kind === "offset") {
     const { page, pageSize } = pagination;
